@@ -1,5 +1,5 @@
 function drawLineGraph(options) {
-  const canvas = document.querySelector('canvas');
+  const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   const canvasHeight = 470,
     canvasWidth = 850;
@@ -7,6 +7,9 @@ function drawLineGraph(options) {
   // set canvas width/height
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
+
+  const element = document.getElementById("canvas-container");
+  element.appendChild(canvas);
 
   // calculate average point
   console.log(options.dataset)
@@ -153,52 +156,51 @@ function hideTooltip() {
 }
 
 const caculateMovingAverage = (data, window) => {
-    const steps = data.length - window;
-	const result = [ ];
-    for (let i = 0; i < steps; ++i) {
-        const sum = data.slice(i, i + window).reduce((prev, current) => {
-          return prev + current.close;
-        }, 0);
-        result.push({
-          average: sum / window,
-          date: data[i].date
-        });
-    }
-  	return result;
+  const steps = data.length - window;
+  const result = [];
+  for (let i = 0; i < steps; ++i) {
+    const sum = data.slice(i, i + window).reduce((prev, current) => {
+      return prev + current.close;
+    }, 0);
+    result.push({
+      average: sum / window,
+      date: data[i].date
+    });
+  }
+  return result;
 };
 
-const getData = () =>{
+const getData = () => {
   fetch("https://eodhistoricaldata.com/api/eod/IBM.US?api_token=5f5d2cad2a1510.03138117&fmt=json&period=d&from=2023-04-01")
-	.then(response => response.json())
-	.then(data =>{
-    const dataset = caculateMovingAverage(data, 20);
-    //draw line Graph
+    .then(response => response.json())
+    .then(data => {
+      const dataset = caculateMovingAverage(data, 20);
+      //draw line Graph
 
-    const options = {
-      dataset: dataset,
-      lineColor: '#ca7370',
-      circleColor: '#ca7370',
-      yAxis: {
-        totalSteps: 10,
-        label: {
-          color: "#000",
-          font: "12px Arial",
-          align: "center"
+      const options = {
+        dataset: dataset,
+        lineColor: '#ca7370',
+        circleColor: '#ca7370',
+        yAxis: {
+          totalSteps: 10,
+          label: {
+            color: "#000",
+            font: "12px Arial",
+            align: "center"
+          },
         },
-      },
-      xAxis: {
-        label: {
-          color: "#000",
-          font: "12px Arial",
-          align: "left"
-        },
+        xAxis: {
+          label: {
+            color: "#000",
+            font: "12px Arial",
+            align: "left"
+          },
+        }
       }
-    }
-    
-    drawLineGraph(options);
-    }
-  )
-	.catch(err => console.error(err));
+
+      drawLineGraph(options);
+    })
+    .catch(err => console.error(err));
 
 }
 getData();
