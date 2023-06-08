@@ -1,0 +1,15 @@
+canvas{
+    border:1px solid #000000;
+}
+body{
+    margin-top: 70px;
+    margin-left: 200px;
+}
+#tooltip {
+    position: absolute;
+    display: none;
+    background-color: #5e5959;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+}
